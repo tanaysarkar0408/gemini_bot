@@ -17,6 +17,7 @@ I created this app using Google's new AI tool.
 - And I created the UI on my own.
 
 # [Download Now](https://github.com/tanaysarkar0408/gemini_bot/releases/tag/GeminiAppV0.1)
-![](https://github.com/tanaysarkar0408/gemini_bot/assets/108966939/f03eb44f-7c70-47d6-ae60-f2d34d2f4579.gif)
+
+![Gemini_Bot gif](https://github.com/tanaysarkar0408/gemini_bot/assets/108966939/b93c4320-86e7-4ea0-a3bf-5533b62a4d0e)
 
 
