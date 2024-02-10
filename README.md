@@ -18,6 +18,6 @@ I created this app using Google's new AI tool.
 
 # [Download Now](https://github.com/tanaysarkar0408/gemini_bot/releases/tag/GeminiAppV0.1)
 
-![Gemini_Bot gif](https://github.com/tanaysarkar0408/gemini_bot/assets/108966939/b93c4320-86e7-4ea0-a3bf-5533b62a4d0e)
+![](https://github.com/tanaysarkar0408/gemini_bot/blob/master/Gemini_Bot.gif.gif)
 
 
