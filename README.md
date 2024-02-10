@@ -8,12 +8,12 @@ I created this app using Google's new AI tool.
 
 - I'll add the image recognition feature in the near future.
 
-- I learnt how to use # PostMan for API testing<br>
+- I learnt how to use PostMan for API testing.
 
 - I learnt basics of HTTP like GET,POST,etc.
 
-- I made my BLOC Concept clear
+- I made my BLOC Concept clear.
 
-- And I created the UI on my own
+- And I created the UI on my own.
 
 
