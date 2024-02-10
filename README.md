@@ -20,6 +20,6 @@ I created this app using Google's new AI tool.
 
 <br>
 
-https://github.com/tanaysarkar0408/gemini_bot/assets/108966939/e015f95e-7008-429d-97a9-d976975ef4e9
+![Gemini_Bot](https://github.com/tanaysarkar0408/gemini_bot/assets/108966939/f03eb44f-7c70-47d6-ae60-f2d34d2f4579)
 
 
