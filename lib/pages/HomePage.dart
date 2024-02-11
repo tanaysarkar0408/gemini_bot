@@ -1,9 +1,9 @@
 import 'dart:ui';
-
 import 'package:gemini_bot/Bloc/chat_bloc.dart';
 import 'package:gemini_bot/models/chat_message_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gemini_bot/pages/camera_page.dart';
 import 'package:lottie/lottie.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
@@ -130,6 +130,28 @@ class _HomePageState extends State<HomePage> {
                           // height: 70,
                           child: Row(
                             children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Opacity(
+                                  opacity: 0.7,
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    radius: 26,
+                                    child: CircleAvatar(
+                                      radius: 25,
+                                      backgroundColor: Colors.purple[900],
+                                      child: IconButton(
+                                          onPressed: () {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => const CameraPage()));
+                                          },
+                                          icon: const Icon(
+                                            Icons.camera_alt,
+                                            size: 25,
+                                          )),
+                                    ),
+                                  ),
+                                ),
+                              ),
                               Expanded(
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
