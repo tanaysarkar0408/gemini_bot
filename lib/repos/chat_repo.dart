@@ -48,5 +48,6 @@ class ChatRepo {
     } catch (e) {
       log(e.toString());
     }
+    return null;
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gemini_bot/pages/camera_page.dart';
 import 'package:lottie/lottie.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,6 +18,33 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final ChatBloc chatBloc = ChatBloc();
   TextEditingController textEditingController = TextEditingController();
+  late stt.SpeechToText _speech;
+  bool _isListening = false;
+  String _speechText = '';
+  @override
+  void initState() {
+    super.initState();
+    _speech = stt.SpeechToText();
+  }
+
+  void _startListening() async {
+    bool available = await _speech.initialize();
+    if (available) {
+      setState(() => _isListening = true);
+      _speech.listen(onResult: (val) {
+        setState(() {
+          _speechText = val.recognizedWords;
+          textEditingController.text = _speechText;
+        });
+      });
+    }
+  }
+
+  void _stopListening() {
+    setState(() => _isListening = false);
+    _speech.stop();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: GradientText(
-                                  'CHAT BOT',
+                                  'ASK TINA',
                                   style: const TextStyle(
                                       fontFamily: 'Sixtyfour',
                                       fontWeight: FontWeight.bold,
@@ -130,6 +158,7 @@ class _HomePageState extends State<HomePage> {
                           // height: 70,
                           child: Row(
                             children: [
+                              //Camera Button
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Opacity(
@@ -152,6 +181,36 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               ),
+
+                              //Mic
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Opacity(
+                                  opacity: 0.7,
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    radius: 26,
+                                    child: CircleAvatar(
+                                      radius: 25,
+                                      backgroundColor: Colors.purple[900],
+                                      child: IconButton(
+                                          onPressed: () {
+                                           if (! _isListening) {
+                                             _startListening();
+                                           } else {
+                                             _stopListening();
+                                           }
+                                          },
+                                          icon: Icon(
+                                            size: 25,
+                                            _isListening ?  Icons.mic : Icons.mic_none
+                                          )),
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              //TextField
                               Expanded(
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -168,6 +227,8 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               ),
+
+                              // Send Button
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Opacity(
