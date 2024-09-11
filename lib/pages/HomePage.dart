@@ -6,7 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gemini_bot/pages/camera_page.dart';
 import 'package:lottie/lottie.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:speech_to_text/speech_to_text.dart' as stt; // speech to text
+import 'package:flutter_tts/flutter_tts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,12 +20,15 @@ class _HomePageState extends State<HomePage> {
   final ChatBloc chatBloc = ChatBloc();
   TextEditingController textEditingController = TextEditingController();
   late stt.SpeechToText _speech;
+  late FlutterTts _flutterTts;
   bool _isListening = false;
   String _speechText = '';
+
   @override
   void initState() {
     super.initState();
     _speech = stt.SpeechToText();
+    _flutterTts = FlutterTts();
   }
 
   void _startListening() async {
@@ -35,14 +39,42 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           _speechText = val.recognizedWords;
           textEditingController.text = _speechText;
+
+          // Check if the speech recognition result is final
+          if (val.finalResult) {
+            // Wait for a few seconds and then send the message
+            Future.delayed(const Duration(seconds: 2), () {
+              if (_speechText.isNotEmpty) {
+                _sendMessage();
+              }
+            });
+          }
         });
       });
     }
   }
 
+  void _sendMessage() {
+    if (textEditingController.text.isNotEmpty) {
+      String text = textEditingController.text;
+      textEditingController.clear();
+      chatBloc.add(ChatGenerateNewTextMessageEvent(inputMessage: text));
+    }
+  }
+
+  void _speak(String text) async {
+    await _flutterTts.speak(text);
+  }
+
   void _stopListening() {
     setState(() => _isListening = false);
     _speech.stop();
+  }
+  @override
+  void dispose() {
+    _flutterTts.stop();
+    _speech.stop();
+    super.dispose();
   }
 
 
@@ -52,7 +84,14 @@ class _HomePageState extends State<HomePage> {
       body: BlocConsumer<ChatBloc, ChatState>(
         bloc: chatBloc,
         listener: (context, state) {
-          // TODO: implement listener
+          if (state is ChatSuccessState) {
+            if (state.messages.isNotEmpty) {
+              ChatMessageModel lastMessage = state.messages.last;
+              if (lastMessage.role == 'model') {
+                _speak(lastMessage.parts.first.text); // Speak bot response
+              }
+            }
+          }
         },
         builder: (context, state) {
           switch (state.runtimeType) {
@@ -120,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                                           Text(
                                             messages[index].role == "user"
                                                 ? 'USER:-'
-                                                : 'CHAT BOT:-',
+                                                : 'TINA:-',
                                             style: TextStyle(
                                               fontFamily: 'Sixtyfour',
                                               fontSize: 12,
