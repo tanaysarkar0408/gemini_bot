@@ -18,6 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final ChatBloc chatBloc = ChatBloc();
   TextEditingController textEditingController = TextEditingController();
+  final ScrollController _scrollController = ScrollController(); // Add this line
   late stt.SpeechToText _speech;
   late FlutterTts _flutterTts;
   bool _isListening = false;
@@ -73,6 +74,7 @@ class _HomePageState extends State<HomePage> {
       String text = textEditingController.text;
       textEditingController.clear();
       chatBloc.add(ChatGenerateNewTextMessageEvent(inputMessage: text));
+      _scrollToBottom();
     }
   }
 
@@ -95,12 +97,22 @@ class _HomePageState extends State<HomePage> {
     _speech.stop();
   }
 
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
+  }
 
 
   @override
   void dispose() {
     _flutterTts.stop();
     _speech.stop();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -117,6 +129,7 @@ class _HomePageState extends State<HomePage> {
               if (lastMessage.role == 'model') {
                 _speak(lastMessage.parts.first.text); // Speak bot response
               }
+              _scrollToBottom();
             }
           }
         },
@@ -166,6 +179,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Expanded(
                             child: ListView.builder(
+                              controller: _scrollController,
                             itemCount: messages.length,
                             itemBuilder: (context, index) {
                               return Padding(
