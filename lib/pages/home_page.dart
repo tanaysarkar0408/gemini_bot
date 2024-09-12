@@ -7,6 +7,7 @@ import 'package:lottie/lottie.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt; // speech to text
 import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   bool _isListening = false;
   bool _isSpeaking = false;
   String _speechText = '';
+  Timer? _timeOutTimer ;
 
 
   @override
@@ -42,6 +44,16 @@ class _HomePageState extends State<HomePage> {
       setState(() {
       });
     });
+    chatBloc.generating ?
+    _timeOutTimer = Timer(const Duration(seconds:5), (){
+      if (_isListening){
+        // If still listening after 10 seconds, stop and show SnackBar
+        _stopListening();
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Could not fetch data. Sorry!!!"))
+        );
+      }
+    }) : _timeOutTimer?.cancel();
   }
 
 
@@ -49,6 +61,7 @@ class _HomePageState extends State<HomePage> {
     bool available = await _speech.initialize();
     if (available) {
       setState(() => _isListening = true);
+
       _speech.listen(onResult: (val) {
         setState(() {
           _speechText = val.recognizedWords;
@@ -63,6 +76,7 @@ class _HomePageState extends State<HomePage> {
                 _stopListening();
               }
             });
+
           }
         });
       });
@@ -95,13 +109,14 @@ class _HomePageState extends State<HomePage> {
   void _stopListening() {
     setState(() => _isListening = false);
     _speech.stop();
+    _timeOutTimer?.cancel();
   }
 
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 5000),
         curve: Curves.easeOut,
       );
     });
@@ -113,6 +128,7 @@ class _HomePageState extends State<HomePage> {
     _flutterTts.stop();
     _speech.stop();
     _scrollController.dispose();
+    _timeOutTimer?.cancel();
     super.dispose();
   }
 
@@ -153,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          SizedBox(
+                            SizedBox(
                             width: double.maxFinite,
                             height: 100,
                             child: Row(
@@ -177,7 +193,7 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ),
-                          Expanded(
+                            Expanded(
                             child: ListView.builder(
                               controller: _scrollController,
                             itemCount: messages.length,
@@ -224,12 +240,12 @@ class _HomePageState extends State<HomePage> {
                             },
                                                         ),
                           ),
-                          if (chatBloc.generating)
+                              if (chatBloc.generating)
                             SizedBox(
                                 height: 100,
                                 width: 100,
                                 child: Lottie.asset('assets/LoadingAnimation.json')),
-                          Column(
+                            Column(
                             children: [
                               if (_isListening)
                               SizedBox(
