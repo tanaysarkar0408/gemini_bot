@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:gemini_bot/pages/HomePage.dart';
+import 'package:gemini_bot/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 

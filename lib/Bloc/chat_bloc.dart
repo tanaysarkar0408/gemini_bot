@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:gemini_bot/models/chat_message_model.dart';
 import 'package:gemini_bot/repos/chat_repo.dart';
-import 'package:meta/meta.dart';
+import "package:meta/meta.dart";
 
 part 'chat_event.dart';
 

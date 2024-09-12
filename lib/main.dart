@@ -1,4 +1,4 @@
-import 'package:gemini_bot/pages/SplashScreen.dart';
+import 'package:gemini_bot/pages/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Chat Bot',
       theme: ThemeData(
-        fontFamily: "Orbitron",
+        fontFamily: "UbuntuMono",
           brightness: Brightness.dark,
           scaffoldBackgroundColor: Colors.grey[700],
           primaryColor: const Color(0xffB47AC0)),
