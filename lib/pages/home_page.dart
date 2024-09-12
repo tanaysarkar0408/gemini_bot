@@ -59,6 +59,7 @@ class _HomePageState extends State<HomePage> {
             Future.delayed(const Duration(seconds: 2), () {
               if (_speechText.isNotEmpty) {
                 _sendMessage();
+                _stopListening();
               }
             });
           }
@@ -213,119 +214,128 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(
                                 height: 100,
                                 width: 100,
-                                child: Lottie.asset('assets/Animation.json')),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            // height: 70,
-                            child: Row(
-                              children: [
-                                //Camera Button
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Opacity(
-                                    opacity: 0.7,
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      radius: 26,
-                                      child: CircleAvatar(
-                                        radius: 25,
-                                        backgroundColor: Colors.purple[900],
-                                        child: IconButton(
-                                            onPressed: () {
-                                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CameraPage()));
-                                            },
-                                            icon: const Icon(
-                                              Icons.camera_alt,
-                                              size: 25,
-                                            )),
+                                child: Lottie.asset('assets/LoadingAnimation.json')),
+                          Column(
+                            children: [
+                              if (_isListening)
+                              SizedBox(
+                                  height: 100,
+                                  width: 100,
+                                  child: Lottie.asset('assets/Animation.json')),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                // height: 70,
+                                child: Row(
+                                  children: [
+                                    //Camera Button
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Opacity(
+                                        opacity: 0.7,
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          radius: 26,
+                                          child: CircleAvatar(
+                                            radius: 25,
+                                            backgroundColor: Colors.purple[900],
+                                            child: IconButton(
+                                                onPressed: () {
+                                                  Navigator.push(context, MaterialPageRoute(builder: (context) => const CameraPage()));
+                                                },
+                                                icon: const Icon(
+                                                  Icons.camera_alt,
+                                                  size: 25,
+                                                )),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
 
-                                //Mic
-                                // Padding(
-                                //   padding: const EdgeInsets.all(8.0),
-                                //   child: Opacity(
-                                //     opacity: 0.7,
-                                //     child: CircleAvatar(
-                                //       backgroundColor: Colors.white,
-                                //       radius: 26,
-                                //       child: CircleAvatar(
-                                //         radius: 25,
-                                //         backgroundColor: Colors.purple[900],
-                                //         child: IconButton(
-                                //             onPressed: () {
-                                //              if (! _isListening) {
-                                //                _startListening();
-                                //              } else {
-                                //                _stopListening();
-                                //              }
-                                //             },
-                                //             icon: Icon(
-                                //               size: 25,
-                                //               _isListening ?  Icons.mic : Icons.mic_none
-                                //             )),
-                                //       ),
-                                //     ),
-                                //   ),
-                                // ),
+                                    //Mic
+                                    // Padding(
+                                    //   padding: const EdgeInsets.all(8.0),
+                                    //   child: Opacity(
+                                    //     opacity: 0.7,
+                                    //     child: CircleAvatar(
+                                    //       backgroundColor: Colors.white,
+                                    //       radius: 26,
+                                    //       child: CircleAvatar(
+                                    //         radius: 25,
+                                    //         backgroundColor: Colors.purple[900],
+                                    //         child: IconButton(
+                                    //             onPressed: () {
+                                    //              if (! _isListening) {
+                                    //                _startListening();
+                                    //              } else {
+                                    //                _stopListening();
+                                    //              }
+                                    //             },
+                                    //             icon: Icon(
+                                    //               size: 25,
+                                    //               _isListening ?  Icons.mic : Icons.mic_none
+                                    //             )),
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // ),
 
-                                //TextField
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextField(
-                                      controller: textEditingController,
-                                      textAlign: TextAlign.justify,
-                                      decoration: InputDecoration(
-                                          hintText: 'TYPE SOMETHING...',
-                                          fillColor: const Color(0x5fB47AC0),
-                                          filled: true,
-                                          border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(50))),
-                                    ),
-                                  ),
-                                ),
-
-                                // Send Button
-                                Padding(
-                                  padding:  const EdgeInsets.all(8.0),
-                                  child: Opacity(
-                                    opacity: 0.7,
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      radius: 26,
-                                      child: CircleAvatar(
-                                        radius: 25,
-                                        backgroundColor: Colors.purple[900],
-                                        child: IconButton(
-                                            onPressed: () {
-                                              if (textEditingController
-                                                  .text.isNotEmpty) {
-                                                String text =
-                                                    textEditingController.text;
-                                                textEditingController.clear();
-                                                chatBloc.add(
-                                                    ChatGenerateNewTextMessageEvent(
-                                                        inputMessage: text));
-                                              }
-                                              else if(textEditingController.text.isEmpty){
-                                                _startListening();
-                                              }
-                                            },
-                                            icon:  Icon(
-                                              textEditingController.text.isEmpty ?
-                                              Icons.mic : Icons.arrow_forward_ios,
-                                              size: 24,
-                                            )),
+                                    //TextField
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextField(
+                                          controller: textEditingController,
+                                          textAlign: TextAlign.justify,
+                                          decoration: InputDecoration(
+                                              hintText: 'TYPE SOMETHING...',
+                                              fillColor: const Color(0x5fB47AC0),
+                                              filled: true,
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(50))),
+                                        ),
                                       ),
                                     ),
-                                  ),
+
+                                    // Send Button
+                                    Padding(
+                                      padding:  const EdgeInsets.all(8.0),
+                                      child: Opacity(
+                                        opacity: 0.7,
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          radius: 26,
+                                          child: CircleAvatar(
+                                            radius: 25,
+                                            backgroundColor: Colors.purple[900],
+                                            child: IconButton(
+                                                onPressed: () {
+                                                  if (textEditingController
+                                                      .text.isNotEmpty) {
+                                                    String text =
+                                                        textEditingController.text;
+                                                    textEditingController.clear();
+                                                    chatBloc.add(
+                                                        ChatGenerateNewTextMessageEvent(
+                                                            inputMessage: text));
+                                                  }
+                                                  else if(textEditingController.text.isEmpty){
+                                                    _startListening();
+                                                  }
+                                                },
+                                                icon:  Icon(
+                                                  textEditingController.text.isEmpty ?
+                                                  Icons.mic : Icons.arrow_forward_ios,
+                                                  size: 24,
+                                                )),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
