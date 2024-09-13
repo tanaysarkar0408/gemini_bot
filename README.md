@@ -11,6 +11,7 @@ I created this app using Google's new AI tool.
 - Speech-to-text
 - Text-to-speech
 - Mic becomes send button, if there is text to send
+- On-Tap the speech stops
 - Loading bars
 - Automatic scroll down to latest message
 - Time out, if output takes more than 15 seconds
